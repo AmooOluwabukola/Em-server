@@ -222,12 +222,12 @@ const updateUserProfile = async (req, res) => {
 };
 
 // set dp
-const updateUserDp =async(req,res)=>{
-    const { userId } = req.user;
-    let profilePicture;
+// const updateUserDp =async(req,res)=>{
+//     const { userId } = req.user;
+//     let profilePicture;
 
     
-}
+// }
 module.exports = {
   getBioProfile,
   followUser,

@@ -59,11 +59,11 @@ const userSchema = new Schema(
     },
     x: {
       type: String,
-      default :"x account"
+      default :"x"
     },
-    Linkedin: {
+    linkedIn: {
       type: String,
-      default :"LinkedIn account"
+      default :"linkedIn "
     },
     followers: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],

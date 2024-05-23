@@ -5,11 +5,12 @@ const port =  process.env.PORT ||5780 ;
 const connect = require('./config/Db');
 const authRoute = require('./route/authRoute');
 const userRoute = require ("./route/userRoute")
+const postRoute =require ("./route/postRoute")
+// custom middlewares to use 
 const cors = require ("cors")
 const cloudinary = require('cloudinary').v2
 const fileUpload = require ("express-fileupload")
 
-// custom middlewares to use 
 app.use(fileUpload({useTempFiles:true}))
 app.use(express.json());
 app.use (cors())
@@ -18,6 +19,7 @@ app.use (cors())
 // API's
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRoute);
+app.use('/api/v1/posts', postRoute)
 
 cloudinary.config({
   cloud_name: process.env.cloud_name,
