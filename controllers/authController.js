@@ -2,7 +2,7 @@ const { json } = require('express');
 const USER = require('../model/userModel');
 const jwt =require("jsonwebtoken");
 const crypto = require ("crypto")
-const sendEmail = require ("../helper/senMail")
+const sendEmail = require ("../helper/sendMail")
 // registration
 const registration = async (req, res) => {
   try {

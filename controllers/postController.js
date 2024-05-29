@@ -1,4 +1,5 @@
 const POST = require('../model/postModel');
+const USER = require ("../model/userModel")
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 

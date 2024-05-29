@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt= require ("jsonwebtoken");
+const crypto =require ("crypto")
 const userSchema = new Schema(
   {
     userName: {
@@ -79,7 +80,7 @@ userSchema.pre('save', async function (next) {
     next();
   }
   const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password, salt);
+  this.password = await bcrypt.hash(this.password, salt); 
   next();
 });
 

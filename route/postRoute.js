@@ -1,5 +1,5 @@
 const express = require("express");
-const {createPost}=require ("../controllers/postController")
+const {createPost,getTimeline,likePost,commentPost,getPostsByUser,getComments}=require ("../controllers/postController")
 const router =express.Router() 
 const authMiddleWare = require("../controllers/middleware/auth")
 
