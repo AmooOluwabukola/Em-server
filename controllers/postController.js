@@ -42,6 +42,94 @@ const createPost = async (req,res)=>{
     }
 };
 
-module.exports = {
-    createPost
-}
+// Timeline
+const getTimeline = async(req,res) =>{
+    const {userId} = req.user
+    try {
+        const user = await USER.findById(userId).populate("following");
+        const followingIds = user.following.map((fIdx)=> fIdx._id);
+        followingIds.push(userId);
+    
+        const posts = await POST.find({user:{$in:followingIds}}).populate("user",'userName')
+        .populate("comments.user","userName").sort({createdAt:-1});
+        res.status(200).json({success:true,message:"timeline post",posts})
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+    };
+    //like and unlike post
+    const likePost = async(req,res)=>{
+    const{userId} = req.user;
+    try {
+        const post = await POST.findById(req.params.postId);
+        if(!post) {
+            return res.status(404).json({error:'post not found.'});
+        }
+       if(post.likes.includes(userId)) {
+        post.likes.pull(userId);
+        await post.save();
+        return res.status(200).json({success:true,message:'post unliked successfully',post});
+       }else{
+    post.likes.push(userId);
+    await post.save();
+    return res.status(200).json({success:true, message:'post liked suucesfully.,',post});
+       }
+    } catch (error) {
+        res.status(500).json({success:false, message: 'failed to like/unlike post'});
+    }
+    }
+    //comments
+    const commentPost = async(req,res)=>{
+        const{userId} = req.user;
+        try {
+            const post = await POST.findById(req.params.postId);
+            if(!post) {
+                return res.status(404).json({success:false, message:'post not found.'});
+            }
+           const comment = {user:userId, text: req.body.text};
+              post.comments.push(comment);
+    
+            await post.save();
+            res.status(201).json({success:true,message:'Comment added successfully',post});
+        } catch (error) {
+            res.status(500).json(err.message);
+        }
+    };
+    //get comments for a post
+    const getComments = async(req,res)=>{
+        try {
+          const post = await POST.findById(req.params.postId).populate('comments.user', 'userName');
+          if (!post) {
+            return res.status(404).json({ success:false,message: 'Post not found.' });
+          }
+      
+          res.status(200).json({success:true,comments:post.comments});
+        } catch (err) {
+          res.status(500).json({ error: 'Failed to fetch comments.' });
+        }
+      };
+    // get all posts by a user
+    const getPostsByUser = async(req,res)=>{
+        const {userId} = req.user
+      
+        try {
+          const post = await POST.find({user:userId}).populate({path:"user",select:"-password"});
+          res.status(200).json({success:true,message:"users post",post})
+        } catch (error) {
+          res.status(500).json(error.message)
+        }
+      }
+    
+    
+    
+    
+    
+    
+    module.exports = {
+        createPost,
+        getTimeline,
+        likePost,
+        commentPost,
+        getComments,
+        getPostsByUser
+    }

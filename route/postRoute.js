@@ -6,5 +6,15 @@ const authMiddleWare = require("../controllers/middleware/auth")
 
 // create route
 router.post('/create-post',authMiddleWare, createPost);
+//timeline route
+router.get('/timeline',authMiddleWare,getTimeline);
+//like a post
+router.post('/like-post/:postId',authMiddleWare,likePost);
+//create commnet on a post
+router.post('/comment-post/:postId',authMiddleWare,commentPost);
+//getting comments for a post
+router.get('/comments/:postId',getComments);
+// getting all posts by user
+router.get('/user-posts',authMiddleWare,getPostsByUser);
 
 module.exports = router
