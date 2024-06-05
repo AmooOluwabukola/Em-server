@@ -51,9 +51,14 @@ const getTimeline = async(req,res) =>{
         const followingIds = user.following.map((fIdx)=> fIdx._id);
         followingIds.push(userId);
     
-        const posts = await POST.find({user:{$in:followingIds}}).populate("user",'userName')
+        const posts = await POST.find({user:{$in:followingIds}}).populate({path:"user",select:'userName profilePhoto'})
         .populate("comments.user","userName").sort({createdAt:-1});
-        res.status(200).json({success:true,message:"timeline post",posts})
+        // Add comment count to each post
+        const postsWithCommentsCount = posts.map(post=>({
+           ...post.toObject(),
+           commentsCount:post.comments.length 
+        }));
+        res.status(200).json({success:true,message:"timeline post",posts:postsWithCommentsCount})
     } catch (error) {
         res.status(500).json(error.message)
     }
@@ -82,10 +87,14 @@ const getTimeline = async(req,res) =>{
     //comments
     const commentPost = async(req,res)=>{
         const{userId} = req.user;
+        const {text}= req.body
         try {
             const post = await POST.findById(req.params.postId);
             if(!post) {
                 return res.status(404).json({success:false, message:'post not found.'});
+            }
+            if (!text){
+                return res.status(400).json({success:false, message:'comment box cannot be empty'});  
             }
            const comment = {user:userId, text: req.body.text};
               post.comments.push(comment);
@@ -99,7 +108,7 @@ const getTimeline = async(req,res) =>{
     //get comments for a post
     const getComments = async(req,res)=>{
         try {
-          const post = await POST.findById(req.params.postId).populate('comments.user', 'userName');
+            const post = await POST.findById(req.params.postId).populate('comments.user', 'userName profilePhoto');
           if (!post) {
             return res.status(404).json({ success:false,message: 'Post not found.' });
           }

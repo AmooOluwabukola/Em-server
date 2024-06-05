@@ -17,6 +17,6 @@ router.get ("/isloggedin", isLoggedIn)
 // forgot password
 router.post('/forgotpassword',forgotPassword);
 // reset passsword ftn
-router.put('/resetpassword/:resetToken',resetPassword)
+router.put('/resetpasswordlink/:resetToken',resetPassword)
 
 module.exports = router;

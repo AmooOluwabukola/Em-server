@@ -1,4 +1,5 @@
 const USER = require("../model/userModel");
+const POST = require ("../model/postModel");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 // get a user by id
@@ -98,7 +99,7 @@ const unfollowUser = async (req, res) => {
   }
 };
 
-//getUsersProfile
+//getUser'sProfile
 const getSingleUser = async (req, res) => {
   const { userId } = req.params;
   try {
@@ -107,7 +108,10 @@ const getSingleUser = async (req, res) => {
       res.status(404).json({ success: false, message: " USER NOT FOUND" });
       return;
     }
-    res.status(200).json({ success: true, message: " user profile", user });
+    // fetching user posts 
+    const posts = await  POST.find({user:userId})
+
+    res.status(200).json({ success: true, message: " user profile", user,posts });
   } catch (error) {
     res.status(500).json(error.message);
   }
