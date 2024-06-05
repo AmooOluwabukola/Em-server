@@ -15,6 +15,6 @@ router.post('/comment-post/:postId',authMiddleWare,commentPost);
 //getting comments for a post
 router.get('/comments/:postId',getComments);
 // getting all posts by user
-router.get('/user-posts',authMiddleWare,getPostsByUser);
+router.get('/profile',authMiddleWare,getPostsByUser);
 
 module.exports = router
